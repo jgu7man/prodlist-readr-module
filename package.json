@@ -1,0 +1,15 @@
+{
+  "name": "prodlist-readr",
+  "version": "1.0.0",
+  "description": "Lector de documentos csv",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@rxweb/reactive-form-validators": "^2.1.2",
+    "angular-material-fileupload": "^3.0.1"
+  }
+}

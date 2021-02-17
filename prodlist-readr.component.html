@@ -1,0 +1,90 @@
+<div class="container">
+  <div class="row">
+    <div class="col s12">
+      <mat-card>
+        
+        <mat-card-header>
+          <mat-card-title>Sube tus productos en una sola vez</mat-card-title>
+          <mat-card-subtitle>
+            Puedes subir un archivo de formato csv para subir de una vez varios productos. Los productos con el mismo ID se actualizarán
+          </mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <mat-horizontal-stepper [linear]="false" [disableRipple]="true" #stepper>
+  
+            <mat-step [stepControl]="fileFormGroup" >
+              <mat-card class="mat-elevation-z0">
+                <form [formGroup]="fileFormGroup">
+                    <mat-card-content>
+                      <ng-template matStepLabel>
+                        
+                        Cargar un archivo
+                      </ng-template>
+                      
+                      <input style="display: none;" type="file" #fileInput name="file" formControlName="fileCtrl" required (change)="uploadFile($event)">
+                      <p *ngIf="filename">{{filename}}</p>
+                      
+                      <button mat-raised-button color="primary" (click)="fileInput.click()">
+                        <ng-container *ngIf="fileControl.hasError('required'); else cambiar">
+                          Cargar
+                        </ng-container>
+                        <ng-template #cambiar>
+                          Cambiar
+                        </ng-template>
+                        archivo
+                      </button>
+                      <mat-error *ngIf="fileControl.errors">
+                        {{getFileErrorMessage(fileControl.errors)}}
+                      </mat-error>
+                      
+                    </mat-card-content>
+                    <mat-card-actions>
+                      <div>
+                        <button [disabled]="fileControl.hasError('required')" mat-button matStepperNext
+                        
+                        >Subir</button>
+                      </div>
+                    </mat-card-actions>
+                  </form>
+
+              </mat-card>
+            </mat-step>
+            
+            <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
+
+              <mat-card class="mat-elevation-z0">
+                <form [formGroup]="secondFormGroup">
+                  <mat-card-content>
+                    <mat-form-field>
+                      <mat-label>Address</mat-label>
+                      <input matInput name="Address" formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY" required>
+                    </mat-form-field>
+                  </mat-card-content>
+                  <mat-card-actions>
+                    <div>
+                      <button mat-button matStepperPrevious>Back</button>
+                      <button mat-button matStepperNext>Next</button>
+                    </div>
+                  </mat-card-actions>
+                </form>
+              </mat-card>
+            </mat-step>
+            
+            <mat-step>
+              <ng-template matStepLabel>Done</ng-template>
+              <p>You are now done.</p>
+              <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button (click)="stepper.reset()">Reset</button>
+              </div>
+            </mat-step>
+          
+          </mat-horizontal-stepper>
+            
+        </mat-card-content>
+        
+      </mat-card>
+    </div>
+  </div>
+</div>
