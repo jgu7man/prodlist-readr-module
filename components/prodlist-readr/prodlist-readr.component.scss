@@ -1,0 +1,25 @@
+::ng-deep {
+    mat-form-field {
+        margin-bottom: 2em;
+    }
+}
+
+.required {
+    color: rgb(225, 37, 37);
+}
+
+.format {
+    color: #202020;
+}
+
+.info {
+    color: rgb(41, 94, 230)
+}
+
+.noresult {
+    min-height: 50vh;
+    display: flex;
+    flex-wrap: wrap column;
+    align-items: center;
+    justify-content: center;
+}

@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
-import { ReadrApiService } from './readr-api.service';
-import { FileUploadedResult } from './readr.model';
+import { ReadrApiService } from '../../readr-api.service';
+import { FileUploadedResult } from '../../readr.model';
 
 @Component({
   selector: 'gdev-prodlist-readr',
@@ -14,8 +14,10 @@ export class ProdlistReadrComponent implements OnInit {
   isLinear = false;
   fileToupload: any
   uploadedResult: FileUploadedResult = {}
+
   fileFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
+  columnsFormGroup: FormGroup;
+  
   filename: string = ''
   fileControl: FormControl = new FormControl('',
     [
@@ -24,15 +26,25 @@ export class ProdlistReadrComponent implements OnInit {
     ]
   )
 
+  @Output() onError: EventEmitter<string> = new EventEmitter()
+
   constructor (
     private _formBuilder: FormBuilder,
-    private _readr: ReadrApiService
+    private _readr: ReadrApiService,
   ) {
     this.fileFormGroup = this._formBuilder.group({
       fileCtrl: this.fileControl
     });
-    this.secondFormGroup = this._formBuilder.group({
-      secondCtrl: ['', Validators.required]
+    this.columnsFormGroup = this._formBuilder.group( {
+      'id': ['', Validators.required],
+      'precio':  ['', Validators.required],
+      'categorias': [''],
+      'subcategorias': [''],
+      'descripcion': [''],
+      'onStock': [''],
+      'referencia': [''],
+      'stockCant': [''],
+      'imagenUrl': [''],
     });
     
   }
@@ -56,9 +68,17 @@ export class ProdlistReadrComponent implements OnInit {
 
   getColumns() {
     this._readr.uploadFile( this.fileToupload )
-      .subscribe( response => {
+      .subscribe(
+        response => {
+          console.log(response)
           this.uploadedResult = response.result
-      })
+        },
+        error => {
+          console.error( error );
+          console.error(error.error.message);
+          this.onError.emit(error.error.message)
+        }
+      )
   }
 
 }

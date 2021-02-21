@@ -1,0 +1,50 @@
+<p>
+Para crear o actualizar tus productos, puedes subir un archivo en formato csv. Es importante que consideres las siguientes indicaciones con el contenido de tu archivo para que la actualización sea efectiva
+</p>
+
+<table>
+    <thead>
+      <tr>
+        <th>Columna</th>
+        <th>Formato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Id</td>
+        <td>Con este campo tus productos serán registrados en la base de datos. Si el Id existe, el producto será actualizado <span class="required">Este campo es obligatorio</span></td>
+      </tr>
+      <tr>
+        <td>Precio</td>
+        <td>Con este campo tus productos mostrarán sus precios.Es importante que subas este dato con separación de millares con COMMA (,) y decimales con PUNTO (.) y sin signo de moneda ($,€,¥...) <span class="required">Este campo es obligatorio</span> </td>
+      </tr>
+      <tr>
+        <td>Referencia</td>
+        <td>Ccorresponde a una nombre, título o referencia del producto, es un texto breve como <span class="format">"Pizza 2 ingredientes" </span></td>
+      </tr>
+      <tr>
+        <td>Descripción</td>
+        <td>Es la descripción de producto, puede ser un texto exteno pero en una sola celda</td>
+      </tr>
+      <tr>
+        <td>Categorias</td>
+        <td>Corresponde a una lista de categorías separadas por comas, con este campo tus productos serán organizados en categorías. Las categorías que no existan en la base de datos, serán creadas. Ejemplo <span class="format">categoria, categoria, cate...</span></td>
+      </tr>
+      <tr>
+        <td>Subcategoria</td>
+        <td>Corresponde a una categoría seguido de una lista de subcetegorías. El formato de tu celda debe ser <span class="format">Categoria:Subcategira, subcategoria, sub...</span></td>
+      </tr>
+      <tr>
+        <td>On Stock</td>
+        <td>Corresponde a una celda que especifique si el producto está en existencia o no</td>
+      </tr>
+      <tr>
+        <td>Cantidad de Stock</td>
+        <td>Corresponde a la cantidad de existencia del producto. Es importante que subas este dato con separación de millares con COMMA (,) y decimales con PUNTO (.)</td>
+      </tr>
+      <tr>
+        <td>Imagen</td>
+        <td>Corresponde a un link de imagen donde tienes alojadas tus imágenes. <span class="required">No admite archivos de imágenes</span></td>
+      </tr>
+    </tbody>
+  </table>

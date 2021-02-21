@@ -24,6 +24,18 @@ export interface DefaultColumns {
   precio: string | number;
 }
 
+export const DefaultColumnsList = [
+  'categorias',
+  'subcategorias',
+  'descripcion',
+  'onStock',
+  'referencia',
+  'stockCant',
+  'imagenUrl',
+  'id',
+  'precio',
+];
+
 export interface ColumnsDefinedResult {
     'items': DefaultColumns[],
     'items_details': Object[],

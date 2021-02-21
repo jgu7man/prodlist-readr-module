@@ -12,6 +12,25 @@
         
         <mat-card-content>
           <mat-horizontal-stepper [linear]="false" [disableRipple]="true" #stepper>
+
+            <mat-step label="Información">
+              <mat-card class="mat-elevation-z0">
+                <mat-card-header>
+                  <mat-card-title> Prepara tu archivo </mat-card-title>
+                </mat-card-header>
+
+                <mat-card-content>
+                  
+                  <gdev-info></gdev-info>
+                </mat-card-content>
+
+                <mat-card-actions>
+                  <div>
+                    <button  mat-raised-button matStepperNext color="primary"> Siguiente</button>
+                  </div>
+                </mat-card-actions>
+              </mat-card>
+            </mat-step>
   
             <mat-step [stepControl]="fileFormGroup" >
               <mat-card class="mat-elevation-z0">
@@ -42,7 +61,7 @@
                     <mat-card-actions>
                       <div>
                         <button [disabled]="fileControl.hasError('required')" mat-button matStepperNext
-                        
+                        (click)="getColumns()"
                         >Subir</button>
                       </div>
                     </mat-card-actions>
@@ -51,20 +70,26 @@
               </mat-card>
             </mat-step>
             
-            <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
+            <mat-step [stepControl]="columnsFormGroup" label="Organiza las columnas" >
 
               <mat-card class="mat-elevation-z0">
-                <form [formGroup]="secondFormGroup">
+                <form [formGroup]="columnsFormGroup">
+                  
+                  <mat-card-header>
+                    <mat-card-subtitle>
+                      Organiza las columnas de tu archivo con los nombres relacionados que debe tener. El resto de tus columnas se incluirán como atributos extras de tus productos
+                    </mat-card-subtitle>
+                  </mat-card-header>
+
                   <mat-card-content>
-                    <mat-form-field>
-                      <mat-label>Address</mat-label>
-                      <input matInput name="Address" formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY" required>
-                    </mat-form-field>
+
                   </mat-card-content>
+                  
+                  
                   <mat-card-actions>
                     <div>
-                      <button mat-button matStepperPrevious>Back</button>
-                      <button mat-button matStepperNext>Next</button>
+                      <button mat-button matStepperPrevious>Atrás</button>
+                      <button mat-button matStepperNext>Siguiente</button>
                     </div>
                   </mat-card-actions>
                 </form>
