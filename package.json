@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@angular/fire": "^6.1.4",
+    "@angular/material": "^11.2.0",
     "@rxweb/reactive-form-validators": "^2.1.2",
     "angular-material-fileupload": "^3.0.1"
   }
