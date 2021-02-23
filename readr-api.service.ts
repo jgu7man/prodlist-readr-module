@@ -12,7 +12,7 @@ import { DefaultColumns, ProductsResult } from './readr.model';
 })
 export class ReadrApiService {
 
-  serverurl: string = 'http://127.0.0.1:5000'
+  serverurl: string = 'https://prodlist-readr-yffgqfgxja-uc.a.run.app'
   constructor (
     private _http: HttpClient,
     private _dialog: MatDialog,
