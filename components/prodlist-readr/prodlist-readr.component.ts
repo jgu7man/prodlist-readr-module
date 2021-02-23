@@ -108,17 +108,13 @@ export class ProdlistReadrComponent implements OnInit {
 
 
   renameCols() {
-    if ( this.uploadedResult.doc_id ) {
-      this.readr_.renameCols( this.synonimsCols, this.uploadedResult.doc_id )
+      this.readr_.renameCols( this.synonimsCols, this.fileToupload)
         .subscribe( response => {
           console.log( response )
           this.productsResult = response
           this.stepper.next()
         })
-    } else {
-      console.error({ 'message': 'No se puede enviar la solicitud sin id de documento' });
-      throw { 'message': 'No se puede enviar la solicitud sin id de documento' }
-    }
+
   }
 
   validateEmptyCol( column: any ) {

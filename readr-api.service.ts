@@ -24,7 +24,7 @@ export class ReadrApiService {
 
     this.toggleLoading()
     var formData = new FormData()
-        formData.set('dataset', file)
+        formData.set('file', file)
 
 
     const headers = new HttpHeaders( {
@@ -47,10 +47,14 @@ export class ReadrApiService {
   }
 
 
-  renameCols( columns: DefaultColumns, fileid: string ) {
+  renameCols( columns: DefaultColumns, file: any ) {
 
     this.toggleLoading()
-    const body = { fileid, columns }
+    let cols = JSON.stringify(columns)
+    var body = new FormData()
+    body.set( 'file', file )
+    body.set( 'columns',cols)
+
 
     const headers = new HttpHeaders( {
       'ContentType': 'application/json',

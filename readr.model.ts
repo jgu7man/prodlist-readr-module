@@ -1,8 +1,6 @@
 export interface FileUploadedResult {
   items_cant?: number;
-  fileURL?: string;
   file_name?: string;
-  doc_id?: string;
   columns?: string[];
   file_ref?: string;
 }
