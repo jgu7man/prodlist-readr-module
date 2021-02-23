@@ -1,8 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSelectChange } from '@angular/material/select';
+import { MatStepper } from '@angular/material/stepper';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { ReadrApiService } from '../../readr-api.service';
-import { FileUploadedResult } from '../../readr.model';
+import { FileUploadedResult, DefaultColumns, DefaultColumnsList, DefaultCol, ProductsResult } from '../../readr.model';
 
 @Component({
   selector: 'gdev-prodlist-readr',
@@ -11,13 +13,17 @@ import { FileUploadedResult } from '../../readr.model';
 })
 export class ProdlistReadrComponent implements OnInit {
 
+  @ViewChild( 'stepper' ) private stepper!: MatStepper
+  @Input() public firebasePath: string = ''
+
   isLinear = false;
   fileToupload: any
   uploadedResult: FileUploadedResult = {}
+  DefaultColumns = DefaultColumnsList
 
   fileFormGroup: FormGroup;
-  columnsFormGroup: FormGroup;
-  
+  synonimsCols: any = {}
+
   filename: string = ''
   fileControl: FormControl = new FormControl('',
     [
@@ -26,27 +32,25 @@ export class ProdlistReadrComponent implements OnInit {
     ]
   )
 
+  productsResult: ProductsResult = {
+    "columns": [],
+    "firebase_status": "",
+    "items": [],
+    "items_details": [],
+    "cols_details": []
+}
+
   @Output() onError: EventEmitter<string> = new EventEmitter()
 
   constructor (
     private _formBuilder: FormBuilder,
-    private _readr: ReadrApiService,
+    public readr_: ReadrApiService,
   ) {
     this.fileFormGroup = this._formBuilder.group({
       fileCtrl: this.fileControl
     });
-    this.columnsFormGroup = this._formBuilder.group( {
-      'id': ['', Validators.required],
-      'precio':  ['', Validators.required],
-      'categorias': [''],
-      'subcategorias': [''],
-      'descripcion': [''],
-      'onStock': [''],
-      'referencia': [''],
-      'stockCant': [''],
-      'imagenUrl': [''],
-    });
-    
+
+
   }
 
   ngOnInit() {
@@ -67,11 +71,12 @@ export class ProdlistReadrComponent implements OnInit {
   }
 
   getColumns() {
-    this._readr.uploadFile( this.fileToupload )
+    this.readr_.uploadFile( this.fileToupload )
       .subscribe(
         response => {
           console.log(response)
           this.uploadedResult = response.result
+          this.stepper.next()
         },
         error => {
           console.error( error );
@@ -79,6 +84,52 @@ export class ProdlistReadrComponent implements OnInit {
           this.onError.emit(error.error.message)
         }
       )
+  }
+
+  selectColumn( key: string, selection: MatSelectChange ) {
+    let value = selection.value
+
+    if ( value ) {
+      this.synonimsCols[ value ] = key
+    } else {
+      delete this.synonimsCols[ value ]
+    }
+    console.log( this.synonimsCols )
+  }
+
+
+  includeDefaultColumnSelected( option: string ) {
+    return Object.keys( this.synonimsCols).includes(option) ? true : false
+  }
+
+  validateColumnsSelected() {
+    return Object.keys( this.synonimsCols).includes('id') ? true : false
+  }
+
+
+  renameCols() {
+    if ( this.uploadedResult.doc_id ) {
+      this.readr_.renameCols( this.synonimsCols, this.uploadedResult.doc_id )
+        .subscribe( response => {
+          console.log( response )
+          this.productsResult = response
+          this.stepper.next()
+        })
+    } else {
+      console.error({ 'message': 'No se puede enviar la solicitud sin id de documento' });
+      throw { 'message': 'No se puede enviar la solicitud sin id de documento' }
+    }
+  }
+
+  validateEmptyCol( column: any ) {
+     return this.productsResult.items[column] ? column : null
+  }
+
+
+  async loadToFirestore() {
+    await this.readr_.loadOndatabase( this.productsResult )
+      .then( () => { this.stepper.next() })
+
   }
 
 }

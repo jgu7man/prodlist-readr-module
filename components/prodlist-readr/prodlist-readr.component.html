@@ -2,17 +2,21 @@
   <div class="row">
     <div class="col s12">
       <mat-card>
-        
         <mat-card-header>
           <mat-card-title>Sube tus productos en una sola vez</mat-card-title>
           <mat-card-subtitle>
-            Puedes subir un archivo de formato csv para subir de una vez varios productos. Los productos con el mismo ID se actualizarán
+            Puedes subir un archivo de formato csv para subir de una vez varios
+            productos. Los productos con el mismo ID se actualizarán
           </mat-card-subtitle>
         </mat-card-header>
-        
-        <mat-card-content>
-          <mat-horizontal-stepper [linear]="false" [disableRipple]="true" #stepper>
 
+        <mat-card-content>
+          <mat-horizontal-stepper
+            [linear]="false"
+            [disableRipple]="true"
+            #stepper
+          >
+            <!-- STEP #1 -->
             <mat-step label="Información">
               <mat-card class="mat-elevation-z0">
                 <mat-card-header>
@@ -20,95 +24,206 @@
                 </mat-card-header>
 
                 <mat-card-content>
-                  
                   <gdev-info></gdev-info>
                 </mat-card-content>
 
                 <mat-card-actions>
                   <div>
-                    <button  mat-raised-button matStepperNext color="primary"> Siguiente</button>
+                    <button mat-raised-button matStepperNext color="primary">
+                      Siguiente
+                    </button>
                   </div>
                 </mat-card-actions>
               </mat-card>
             </mat-step>
-  
-            <mat-step [stepControl]="fileFormGroup" >
+
+            <!-- STEP #2 -->
+            <mat-step [stepControl]="fileFormGroup">
               <mat-card class="mat-elevation-z0">
                 <form [formGroup]="fileFormGroup">
-                    <mat-card-content>
-                      <ng-template matStepLabel>
-                        
-                        Cargar un archivo
-                      </ng-template>
-                      
-                      <input style="display: none;" type="file" #fileInput name="file" formControlName="fileCtrl" required (change)="uploadFile($event)">
-                      <p *ngIf="filename">{{filename}}</p>
-                      
-                      <button mat-raised-button color="primary" (click)="fileInput.click()">
-                        <ng-container *ngIf="fileControl.hasError('required'); else cambiar">
-                          Cargar
-                        </ng-container>
-                        <ng-template #cambiar>
-                          Cambiar
-                        </ng-template>
-                        archivo
-                      </button>
-                      <mat-error *ngIf="fileControl.errors">
-                        {{getFileErrorMessage(fileControl.errors)}}
-                      </mat-error>
-                      
-                    </mat-card-content>
-                    <mat-card-actions>
-                      <div>
-                        <button [disabled]="fileControl.hasError('required')" mat-button matStepperNext
-                        (click)="getColumns()"
-                        >Subir</button>
-                      </div>
-                    </mat-card-actions>
-                  </form>
-
-              </mat-card>
-            </mat-step>
-            
-            <mat-step [stepControl]="columnsFormGroup" label="Organiza las columnas" >
-
-              <mat-card class="mat-elevation-z0">
-                <form [formGroup]="columnsFormGroup">
-                  
-                  <mat-card-header>
-                    <mat-card-subtitle>
-                      Organiza las columnas de tu archivo con los nombres relacionados que debe tener. El resto de tus columnas se incluirán como atributos extras de tus productos
-                    </mat-card-subtitle>
-                  </mat-card-header>
-
                   <mat-card-content>
+                    <ng-template matStepLabel> Cargar un archivo </ng-template>
 
+                    <input
+                      style="display: none"
+                      type="file"
+                      #fileInput
+                      name="file"
+                      formControlName="fileCtrl"
+                      required
+                      (change)="uploadFile($event)"
+                    />
+                    <p *ngIf="filename">{{ filename }}</p>
+
+                    <button
+                      mat-raised-button
+                      color="primary"
+                      (click)="fileInput.click()"
+                    >
+                      <ng-container
+                        *ngIf="fileControl.hasError('required'); else cambiar"
+                      >
+                        Cargar
+                      </ng-container>
+                      <ng-template #cambiar> Cambiar </ng-template>
+                      archivo
+                    </button>
+                    <mat-error *ngIf="fileControl.errors">
+                      {{ getFileErrorMessage(fileControl.errors) }}
+                    </mat-error>
                   </mat-card-content>
-                  
-                  
                   <mat-card-actions>
                     <div>
-                      <button mat-button matStepperPrevious>Atrás</button>
-                      <button mat-button matStepperNext>Siguiente</button>
+                      <button
+                        [disabled]="fileControl.hasError('required')"
+                        mat-button
+                        (click)="getColumns()"
+                      >
+                        Subir
+                      </button>
                     </div>
                   </mat-card-actions>
                 </form>
               </mat-card>
             </mat-step>
-            
-            <mat-step>
-              <ng-template matStepLabel>Done</ng-template>
-              <p>You are now done.</p>
+
+            <!--  STEP 3 -->
+            <mat-step label="Organiza las columnas"
+            >
+              <mat-card class="mat-elevation-z0">
+                <mat-card-header>
+                  <mat-card-subtitle>
+                    Organiza las columnas de tu archivo con los nombres
+                    relacionados que debe tener. El resto de tus columnas se
+                    incluirán como atributos extras de tus productos
+                  </mat-card-subtitle>
+                </mat-card-header>
+
+                <mat-card-content>
+                  <mat-selection-list *ngIf="uploadedResult.columns else noColumns" role="list">
+
+                    <mat-list-option
+                      checkboxPosition="before"
+                      *ngFor="let col of uploadedResult.columns"
+                      role="listitem"
+                      disableRipple="true"
+                    >
+                      <div class="row">
+                        <div class="col s6">{{ col }}</div>
+                        <div class="col s6">
+                          <mat-select
+                            placeholder="Asigna la columna"
+                            name="col"
+                            (selectionChange)="selectColumn(col, $event)"
+                          >
+                            <mat-option>Ninguno</mat-option>
+                            <mat-option
+                              *ngFor="let dfCol of DefaultColumns"
+                              [value]="dfCol"
+                              [disabled]="includeDefaultColumnSelected(dfCol)"
+                            >
+                              {{ dfCol }}
+                            </mat-option>
+                          </mat-select>
+                        </div>
+                      </div>
+                    </mat-list-option>
+                  </mat-selection-list>
+
+                  <ng-template #noColumns>
+                    <p style="color: rgb(247, 57, 57)">
+                      Necesitas agregar un archivo csv para mostrarte las columnas
+                    </p>
+                  </ng-template>
+
+                </mat-card-content>
+
+
+
+                <mat-card-actions>
+                  <div>
+                    <button mat-button matStepperPrevious>Atrás</button>
+                    <button mat-button  (click)="renameCols()">Siguiente</button>
+                  </div>
+                </mat-card-actions>
+              </mat-card>
+            </mat-step>
+
+
+            <!-- STEP 4 -->
+            <mat-step label="Cargar">
+
+              <mat-card class="mat-elevation-z0">
+                <mat-card-header>
+                  <mat-card-title>Preparado para cargar</mat-card-title>
+                  <mat-card-subtitle>Revisa el contenido de tu información y la manera en que se subirán a tu base de datos</mat-card-subtitle>
+                </mat-card-header>
+
+                <mat-card-content>
+                  <ng-container *ngIf="productsResult && productsResult.items.length > 0; else noProducts">
+                    <p><b>Columnas por default</b></p>
+
+                    <div class="table-container">
+                      <table mat-table [dataSource]="productsResult.items" class="mat-elevation-z8">
+                        <ng-container [matColumnDef]="column" *ngFor="let column of DefaultColumns">
+                          <th mat-header-cell *matHeaderCellDef> {{validateEmptyCol(column)}} </th>
+                          <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="DefaultColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: DefaultColumns;"></tr>
+                      </table>
+                    </div>
+
+                    <p><b>Columnas como detalles</b></p>
+
+                    <div class="table-container">
+                      <table mat-table [dataSource]="productsResult.items_details" class="mat-elevation-z8">
+                        <ng-container [matColumnDef]="column" *ngFor="let column of productsResult.cols_details">
+                          <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+                          <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="productsResult.cols_details"></tr>
+                        <tr mat-row *matRowDef="let row; columns: productsResult.cols_details;"></tr>
+                      </table>
+                    </div>
+
+                  </ng-container>
+                  <ng-template #noProducts>
+                    <p style="color: rgb(247, 57, 57)">
+                      Necesitas agregar un archivo csv para mostrarte las filas de productos
+                    </p>
+                  </ng-template>
+
+                </mat-card-content>
+              </mat-card>
+
+
               <div>
+                <p style="font-size: large;"
+                *ngIf="productsResult.items.length > 0 "
+                ><b>¿Listo para cargar a la base de datos?</b></p>
                 <button mat-button matStepperPrevious>Back</button>
-                <button mat-button (click)="stepper.reset()">Reset</button>
+                <button mat-raised-button (click)="loadToFirestore()" color="primary"
+                [disabled]="productsResult.items.length == 0 ">Cargar</button>
+
+                <p *ngIf="readr_.itemLoaded$ | async as itemLoaded"> Cargando {{itemLoaded}} de {{uploadedResult.items_cant}} </p>
               </div>
             </mat-step>
-          
+
+
+            <!-- STEP 5 -->
+            <mat-step label="Hecho!">
+              <mat-card class="mat-elevation-z0">
+                <mat-card-header>
+                  <mat-card-title>Está hecho</mat-card-title>
+                  <mat-card-subtitle>Has cargado {{uploadedResult.items_cant}} productos a tu base de datos </mat-card-subtitle>
+                </mat-card-header>
+              </mat-card>
+            </mat-step>
           </mat-horizontal-stepper>
-            
         </mat-card-content>
-        
       </mat-card>
     </div>
   </div>

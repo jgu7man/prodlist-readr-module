@@ -2,6 +2,9 @@
     mat-form-field {
         margin-bottom: 2em;
     }
+    th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+      min-width: 75px !important;
+    }
 }
 
 .required {
@@ -22,4 +25,13 @@
     flex-wrap: wrap column;
     align-items: center;
     justify-content: center;
+}
+
+table {
+  margin-bottom: 2em;
+}
+
+.table-container {
+  max-height: 50vh;
+  overflow: auto;
 }

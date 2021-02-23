@@ -8,8 +8,8 @@ export interface FileUploadedResult {
 }
 
 export interface ColumnsRequest {
-    fieldid: string;
-    columns: DefaultColumns;
+  fieldid: string;
+  columns: DefaultColumns;
 }
 
 export interface DefaultColumns {
@@ -20,24 +20,43 @@ export interface DefaultColumns {
   referencia?: string;
   stockCant?: string | number;
   imagenUrl?: string;
-  id: string;
-  precio: string | number;
+  id?: string;
+  precio?: string | number;
+}
+
+export interface ProductsResult {
+  columns: string[];
+  cols_details: string[];
+  items: Object[];
+  items_details: Object[];
+  firebase_status: string;
 }
 
 export const DefaultColumnsList = [
-  'categorias',
-  'subcategorias',
-  'descripcion',
-  'onStock',
-  'referencia',
-  'stockCant',
-  'imagenUrl',
   'id',
   'precio',
+  'referencia',
+  'descripcion',
+  'categorias',
+  'subcategorias',
+  'onStock',
+  'stockCant',
+  'imagenUrl',
 ];
 
 export interface ColumnsDefinedResult {
-    'items': DefaultColumns[],
-    'items_details': Object[],
-    'firebase_status': string, 
+  items: DefaultColumns[];
+  items_details: Object[];
+  firebase_status: string;
 }
+
+export type DefaultCol =
+  | 'categorias'
+  | 'subcategorias'
+  | 'descripcion'
+  | 'onStock'
+  | 'referencia'
+  | 'stockCant'
+  | 'imagenUrl'
+  | 'id'
+  | 'precio';
